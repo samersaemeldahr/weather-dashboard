@@ -1,0 +1,11 @@
+h1 {
+    color: white;
+}
+
+#weatherContent {
+    display: none;
+}
+
+#results {
+    height: 100vh;
+}
