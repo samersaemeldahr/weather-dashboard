@@ -159,6 +159,10 @@ $("#searchBtn").on("click", function(event) {
 
 // WHEN I click on a city in the search history
 // THEN I am again presented with current and future conditions for that city
+$(document).on("click", ".list-group-item", function() {
+    var cityList = $(this).text();
+    currentWeather(cityList);
+});
 
 // WHEN I open the weather dashboard
 // THEN I am presented with the last searched city forecast
