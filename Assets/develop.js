@@ -76,6 +76,7 @@ function currentWeather(city) {
 
             // WHEN I view the UV index
             // THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
+            // 0-2 green#3EA72D, 3-5 yellow#FFF300, 6-7 orange#F18B00, 8-10 red#E53210, 11+violet#B567A4
             if (uvIndexValue >= 1 && uvIndexValue <= 2) {
                 $("#uvIndexColor").css("background-color", "green").css("color", "white").after(" Low");
             } else if (uvIndexValue >= 3 && uvIndexValue <= 5) {
@@ -161,4 +162,12 @@ $("#searchBtn").on("click", function(event) {
 
 // WHEN I open the weather dashboard
 // THEN I am presented with the last searched city forecast
+$(document).ready(function() {
+    var history = JSON.parse(localStorage.getItem("city"));
 
+    if (history !== null) {
+        var lastSearchedIndex = history.length - 1;
+        var lastCity = history[lastSearchedIndex];
+        currentWeather(lastCity);
+    }
+});
