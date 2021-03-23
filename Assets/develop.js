@@ -1,17 +1,3 @@
-/*
-GIVEN a weather dashboard with form inputs
-WHEN I search for a city
-THEN I am presented with current and future conditions for that city and that city is added to the search history
-WHEN I view current weather conditions for that city
-THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-WHEN I view the UV index
-THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-WHEN I view future weather conditions for that city
-THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, and the humidity
-WHEN I click on a city in the search history
-THEN I am again presented with current and future conditions for that city
-*/
-
 // Get date
 var today = moment().format("MM-DD-YYYY");
 
@@ -30,19 +16,15 @@ function currentWeather(city) {
 
         // Clear out data
         $("#cityInfo").empty();
-        
 
         // Icon representation of weather conditions
         var iconCode = weatherInfo.weather[0].icon;
         var iconLink = `https://openweathermap.org/img/w/${iconCode}.png`;
-
-        // WHEN I view current weather conditions for that city
-        // THEN I am presented with the city name
-        // the date
         
-        // the temperature
-        // the humidity
-        // the wind speed
+        // display the date
+        // display the temperature
+        // display the humidity
+        // display the wind speed
         var currentCity = $(`
             <h2 id="currentCity">
                 ${weatherInfo.name} ${today} <img src="${iconLink}" alt="${weatherInfo.weather[0].description}" />
@@ -74,9 +56,7 @@ function currentWeather(city) {
 
             futureWeather(lat, lon);
 
-            // WHEN I view the UV index
-            // THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-            // 0-2 green#3EA72D, 3-5 yellow#FFF300, 6-7 orange#F18B00, 8-10 red#E53210, 11+violet#B567A4
+            // display color that indicates whether the conditions are favorable, moderate, or severe
             if (uvIndexValue >= 1 && uvIndexValue <= 2) {
                 $("#uvIndexColor").css("background-color", "green").css("color", "white").after(" Low");
             } else if (uvIndexValue >= 3 && uvIndexValue <= 5) {
@@ -95,7 +75,7 @@ function currentWeather(city) {
 // function for future condition
 function futureWeather(lat, lon) {
 
-    // THEN I am presented with a 5-day forecast
+    // 5-day forecast URL
     var futureURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=f885eb5bc5def9b9dd9868e8e9a359ad`;
 
     $.ajax({
@@ -103,7 +83,7 @@ function futureWeather(lat, lon) {
         method: "GET"
     }).then(function(futureResponse) {
 
-        // Clear out data
+        // Clear out future forecast
         $("#futureForecast").empty();
         
         // For loop function for 5 day forecast
@@ -115,13 +95,14 @@ function futureWeather(lat, lon) {
                 humidity: futureResponse.daily[i].humidity
             };
 
+            // display the date
+            // get icon representation of weather conditions
             var currentDate = moment.unix(cityInfo.date).format("MM-DD-YYYY");
             var iconLink = `<img src="https://openweathermap.org/img/w/${cityInfo.icon}.png" alt="${futureResponse.daily[i].weather[0].main}" />`;
 
-            // displays the date
-            // an icon representation of weather conditions
-            // the temperature
-            // the humidity
+            
+            // display the temperature
+            // display the humidity
             var futureContent = $(`
                 <div class="pl-3">
                     <div class="card pl-3 pt-3 px-3 mb-3 bg-primary text-light" style="width: 12rem;>
