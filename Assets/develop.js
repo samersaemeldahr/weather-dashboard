@@ -72,6 +72,7 @@ function currentWeather(city) {
 
             $("#cityInfo").append(uvIndexContent);
 
+            futureWeather(lat, lon);
 
             // WHEN I view the UV index
             // THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
@@ -91,17 +92,52 @@ function currentWeather(city) {
 }
 
 // function for future condition
+function futureWeather(lat, lon) {
 
     // THEN I am presented with a 5-day forecast
+    var futureURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=f885eb5bc5def9b9dd9868e8e9a359ad`;
+
+    $.ajax({
+        url: futureURL,
+        method: "GET"
+    }).then(function(futureResponse) {
 
         // Clear out data
-
+        $("#futureForecast").empty();
+        
         // For loop function for 5 day forecast
+        for (var i = 1; i < 6; i++) {
+            var cityInfo = {
+                date: futureResponse.daily[i].dt,
+                icon: futureResponse.daily[i].weather[0].icon,
+                temp: futureResponse.daily[i].temp.day,
+                humidity: futureResponse.daily[i].humidity
+            };
+
+            var currentDate = moment.unix(cityInfo.date).format("MM-DD-YYYY");
+            var iconLink = `<img src="https://openweathermap.org/img/w/${cityInfo.icon}.png" alt="${futureResponse.daily[i].weather[0].main}" />`;
 
             // displays the date
             // an icon representation of weather conditions
             // the temperature
             // the humidity
+            var futureContent = $(`
+                <div class="pl-3">
+                    <div class="card pl-3 pt-3 px-3 mb-3 bg-primary text-light" style="width: 12rem;>
+                        <div class="card-body">
+                            <h5>${currentDate}</h5>
+                            <p>${iconLink}</p>
+                            <p>Temp: ${cityInfo.temp} °F</p>
+                            <p>Humidity: ${cityInfo.humidity}\%</p>
+                        </div>
+                    </div>
+                <div>
+            `);
+
+            $("#futureForecast").append(futureContent);
+        }
+    }); 
+}
 
 // Search button event listener
 $("#searchBtn").on("click", function(event) {
@@ -117,6 +153,7 @@ $("#searchBtn").on("click", function(event) {
         $("#searchList").append(searchedCity);
     };
     
+    localStorage.setItem("city", JSON.stringify(searchHistory));
 });
 
 // WHEN I click on a city in the search history
